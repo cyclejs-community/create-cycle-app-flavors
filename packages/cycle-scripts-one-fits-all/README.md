@@ -5,7 +5,7 @@
 ## Language
 
 ES6 or Typescript 2.1 configured with:
-* TypeScript targets ES6 with typings for [DOM,ES6,DOM.Iterable,ScriptHost](http://www.typescriptlang.org/docs/handbook/compiler-options.html)
+* TypeScript ```target: ES6``` transpiles to ES6 with [```lib: DOM,ES6,DOM.Iterable,ScriptHost```](http://www.typescriptlang.org/docs/handbook/compiler-options.html) and piped through Bable
 * Babel targets ES5 with [ES2015 preset](https://babeljs.io/docs/plugins/preset-es2015/)
  
 ## Bundler
