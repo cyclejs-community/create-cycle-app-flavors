@@ -84,7 +84,10 @@ module.exports = function init (appPath, appName, verbose, originalDirectory) {
     ],
     plugins: [
         'syntax-jsx',
-        ['transform-react-jsx', { pragma: 'snabb.html' }]
+        [
+          'transform-react-jsx',
+          { pragma: 'snabb.html' }
+        ]
     ]
 }
 

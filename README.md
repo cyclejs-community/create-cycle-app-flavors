@@ -10,17 +10,35 @@ When creating a project, you can inform which flavor you want to use with the `-
 ```sh
 $ create-cycle-app <name> --flavor <flavor>
 ```
-Some examples of how a flavor could be specified:
 
-```
+## Flavor usage
+
+The `--flavor` option value can either be: 
+- a local path such as `./my-flavors/es6-webpack-magic` or 
+- the name of a published `npm` package such as `cycle-scripts-one-fits-all`
+
+A package name may further specify version identifier `@` such as: 
+`cycle-scripts-one-fits-all@1.0.0`
+
+Example `--flavor` use
+
+```bash
 $ create-cycle-app my-app --flavor cycle-scripts-one-fits-all
 
-$ create-cycle-app my-app --flavor cycle-scripts-one-fits-all@x.y.z
+$ create-cycle-app my-app2 --flavor cycle-scripts-one-fits-all@x.y.z
 
-$ create-cycle-app my-app --flavor path/to/cycle-scripts-one-fits-all
-``` 
+$ create-cycle-app my-magic-app --flavor ./my-flavors/es6-webpack-magic
+```
+
+## Flavor development and registration
+
+When you are developing a new flavor, try it out by using the local path `flavor` option variant.
+
+When you are done with your flavor simply `npm publish` it on npm to make it globally accessible.
 
 ## Available Flavors
+
+The following flavors are currently available for reference. We recommend using `one-fits-all` which you can use as a base line for developing your own.
 
 | Flavor | Language | Bundler | CLI compatibility | Status |
 |---------|:--------------------------:|:--------------:|:-------------:|:-------------:|
