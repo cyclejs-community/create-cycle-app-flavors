@@ -1,6 +1,10 @@
 {
   "name": "cycle-scripts-one-fits-all",
+<<<<<<< HEAD
+  "version": "1.0.6",
+=======
   "version": "1.1.0",
+>>>>>>> eb41cb4f42748637c36f6af9121806f13b21b3a3
   "description": "create-cycle-one-fits-all flavor",
   "main": "index.js",
   "scripts": {
