@@ -1,4 +1,5 @@
-'use strict'
+,
+    'use strict'
 
 const fs = require('fs-extra')
 const path = require('path')
@@ -18,7 +19,8 @@ const devDependencies = [
     'cyclejs-test-helpers@1.3.0',
     'html-looks-like@1.0.2',
     'jsverify@0.8.2',
-    'snabbdom-to-html@3.1.1'
+    'snabbdom-to-html@3.1.1',
+    'rimraf@2.6.1'
 ];
 
 function patchGitignore (appPath) {
@@ -84,6 +86,7 @@ module.exports = function init (appPath, appName, verbose, originalDirectory) {
         'start': 'cycle-scripts start',
         'test': 'cycle-scripts test',
         'build': 'cycle-scripts build',
+        'build:clean': 'rimraf build .tmp .nyc_output coverage',
         'eject': 'cycle-scripts eject'
     }
 
