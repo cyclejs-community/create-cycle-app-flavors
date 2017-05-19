@@ -9,6 +9,7 @@ import { App } from './app';
 
 const main : Component = onionify(App);
 
+// Note onionify returns MainFn<Partial<So>, Partial<Si>> so would get errors with run() as we have --strictNullChecks via --strict
 const defaultSinks : (s : Sources) => RootSinks = sources => Object.assign({
     DOM: xs.never(),
     HTTP: xs.never(),
