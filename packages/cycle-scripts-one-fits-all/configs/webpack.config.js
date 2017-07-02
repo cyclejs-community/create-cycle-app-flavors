@@ -1,7 +1,8 @@
 const { createConfig, defineConstants, env, entryPoint, setOutput, sourceMaps,
-    addPlugins, devServer, postcss, sass, typescript, tslint, extractText,
+    addPlugins, devServer, postcss, sass, typescript, extractText,
     match, file
 } = require('webpack-blocks');
+const tslint = require('@webpack-blocks/tslint');
 
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
@@ -17,10 +18,10 @@ const preprocessor = production => ({
     DEVELOPMENT: !production
 });
 
-const ifdef = (opts, block) => context => {
-    let conf = block(context);
-    conf.module.loaders[0].loaders.push(`ifdef-loader?json=${JSON.stringify(opts)}`);
-    return conf;
+const ifdef = (opts, block) => (context, utils) => {
+    let conf = block(context, utils)({});
+    conf.module.rules[0].use.push(`ifdef-loader?json=${JSON.stringify(opts)}`);
+    return utils.merge(conf);
 }
 
 const tsIfDef = production => ifdef(preprocessor(production), typescript({
@@ -39,7 +40,7 @@ if(customConfig === undefined) {
 }
 
 module.exports = createConfig([
-    () => customConfig, //Include user config
+    (context, { merge }) => merge(customConfig), //Include user config
     tslint(),
     match(['*.gif', '*.jpg', '*.jpeg', '*.png', '*.webp'], [
         file()
@@ -74,7 +75,9 @@ module.exports = createConfig([
     ]),
     env('production', [
         tsIfDef(true),
-        extractText('[name].css', 'text/x-sass'),
+        match(['*.scss', '*.sass'], [
+            extractText('[name].[contenthash:8].css')
+        ]),
         addPlugins([
             new CleanWebpackPlugin([appPath('build')]),
             new CopyWebpackPlugin([{ from: 'public', to: '' }]),

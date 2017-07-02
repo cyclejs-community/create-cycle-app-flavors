@@ -26,7 +26,6 @@
         "no-eval": true,
         "no-null-keyword": true,
         "no-shadowed-variable": true,
-        "no-use-before-declare": true,
         "no-var-keyword": true,
         "switch-default": true,
         "triple-equals": true,
