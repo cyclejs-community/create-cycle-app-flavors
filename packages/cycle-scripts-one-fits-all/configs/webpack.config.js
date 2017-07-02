@@ -1,12 +1,10 @@
-const { createConfig, defineConstants, env, entryPoint, setOutput, sourceMaps, addPlugins } = require('@webpack-blocks/webpack2');
-const devServer = require('@webpack-blocks/dev-server2');
-const postcss = require('@webpack-blocks/postcss');
-const sass = require('@webpack-blocks/sass');
-const typescript = require('@webpack-blocks/typescript');
-const tslint = require('@webpack-blocks/tslint');
-const extractText = require('@webpack-blocks/extract-text2');
-const autoprefixer = require('autoprefixer');
+const { createConfig, defineConstants, env, entryPoint, setOutput, sourceMaps,
+    addPlugins, devServer, postcss, sass, typescript, tslint, extractText,
+    match, file
+} = require('webpack-blocks');
+
 const webpack = require('webpack');
+const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -43,9 +41,14 @@ if(customConfig === undefined) {
 module.exports = createConfig([
     () => customConfig, //Include user config
     tslint(),
-    sass(),
-    postcss([
-        autoprefixer({ browsers: ['last 2 versions'] })
+    match(['*.gif', '*.jpg', '*.jpeg', '*.png', '*.webp'], [
+        file()
+    ]),
+    match(['*.scss', '*.sass'], [
+        sass(),
+        postcss([
+            autoprefixer({ browsers: ['last 2 versions'] })
+        ])
     ]),
     defineConstants({
         'process.env.NODE_ENV': process.env.NODE_ENV
@@ -75,7 +78,8 @@ module.exports = createConfig([
         addPlugins([
             new CleanWebpackPlugin([appPath('build')]),
             new CopyWebpackPlugin([{ from: 'public', to: '' }]),
-            new webpack.optimize.UglifyJsPlugin()
+            new webpack.optimize.UglifyJsPlugin(),
+            new webpack.optimize.ModuleConcatenationPlugin()
         ])
     ])
 ])
