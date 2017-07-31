@@ -1,50 +1,52 @@
 import xs, { Stream } from 'xstream';
 import { VNode, DOMSource } from '@cycle/dom';
 import { StateSource } from 'cycle-onionify';
+import isolate from '@cycle/isolate';
 
-import { Sources, Sinks } from './interfaces';
+import { DriverSources, DriverSinks, Component } from './drivers';
+import { routes, initialRoute } from './routes';
 
-export type AppSources = Sources & { onion : StateSource<AppState> };
-export type AppSinks = Sinks & { onion : Stream<Reducer> };
-export type Reducer = (prev : AppState) => AppState;
-export type AppState = {
-    count : number;
-};
+import { State as p1State } from './pages/page1';
+import { State as p2State } from './pages/page2';
+export interface State {
+    thing: number;
+    'page_/' : p1State;
+    'page_/p2' : p2State;
+}
+export type Reducer = (prev? : State) => State | undefined;
+export type Sources = DriverSources & { onion : StateSource<State> };
+export type Sinks = DriverSinks & { onion : Stream<Reducer> };
 
-export function App(sources : AppSources) : AppSinks
-{
-    const action$ : Stream<Reducer> = intent(sources.DOM);
-    const vdom$ : Stream<VNode> = view(sources.onion.state$);
+export function App(sources : Sources) : Sinks {
+    const state$ = sources.onion.state$;
+    const initReducer$ = xs.of(
+        (prevState : State): State =>
+            typeof prevState === 'undefined'
+                ? {
+                      thing: 123,
+                      'page_/': { count: 0 },
+                      'page_/p2': { count: 10 }
+                  }
+                : prevState
+    );
+
+    const match$ = sources.router.define(routes);
+
+    const pageSinks$ = match$.map(
+        ({ path, value: page } : { path : string; value : Component }) => {
+            return isolate(page, `page_${path}`)(
+                Object.assign({}, sources, {
+                    router: sources.router.path(path)
+                })
+            );
+        }
+    ); // no need to remember?
 
     return {
-        DOM: vdom$,
-        onion: action$
+        // TODO remove explicit declaration of sink keys if possible
+        DOM: pageSinks$.map((ps : Sinks) => ps.DOM).flatten(),
+        onion: xs.merge(initReducer$, pageSinks$.map((ps : Sinks) => ps.onion).flatten() as Stream<Reducer>),
+        speech: pageSinks$.map((ps : Sinks) => ps.speech).flatten(),
+        router: pageSinks$.map((ps : Sinks) => ps.router).flatten()
     };
-}
-
-function intent(DOM : DOMSource) : Stream<Reducer>
-{
-    const init$ : Stream<Reducer> = xs.of<Reducer>(() => ({ count: 0 }));
-
-    const add$ : Stream<Reducer> = DOM.select('.add').events('click')
-        .mapTo<Reducer>(state => ({ ...state, count: state.count + 1 }));
-
-    const subtract$ : Stream<Reducer> = DOM.select('.subtract').events('click')
-        .mapTo<Reducer>(state => ({ ...state, count: state.count - 1 }));
-
-    return xs.merge(init$, add$, subtract$);
-}
-
-function view(state$ : Stream<AppState>) : Stream<VNode>
-{
-    return state$
-        .map(s => s.count)
-        .map(count =>
-            <div>
-                <h2>My Awesome Cycle.js app</h2>
-                <span>{ 'Counter: ' + count }</span>
-                <button type='button' className='add'>Increase</button>
-                <button type='button' className='subtract'>Decrease</button>
-            </div>
-        );
 }

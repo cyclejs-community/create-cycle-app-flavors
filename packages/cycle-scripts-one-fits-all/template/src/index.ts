@@ -1,37 +1,29 @@
-import xs from 'xstream';
 import { setup, run } from '@cycle/run';
-import { restartable, rerunner } from 'cycle-restart';
-import { makeDOMDriver } from '@cycle/dom';
-import { makeHTTPDriver } from '@cycle/http';
-import { timeDriver } from '@cycle/time';
+import { rerunner } from 'cycle-restart';
 import isolate from '@cycle/isolate';
 import onionify from 'cycle-onionify';
+import storageify from 'cycle-storageify';
 
-import { Component, Sources, RootSinks } from './interfaces';
+import { mkDrivers, Component } from './drivers';
 import { App } from './app';
 
-const main : Component = onionify(App);
-
-let drivers : any, driverFn : any;
-/// #if PRODUCTION
-drivers = {
-    DOM: makeDOMDriver('#app'),
-    HTTP: makeHTTPDriver(),
-    Time: timeDriver
+// TODO PR upstream - 2nd,3rd options should be optional
+declare type StorageifyOptions = {
+    key : string;
+    serialize(state : any): string;
+    deserialize(stateStr : string): any;
 };
-/// #else
-driverFn = () => ({
-    DOM: restartable(makeDOMDriver('#app'), { pauseSinksWhileReplaying: false }),
-    HTTP: restartable(makeHTTPDriver()),
-    Time: timeDriver
-});
-/// #endif
-export const driverNames : string[] = Object.keys(drivers || driverFn());
+
+const main: Component = onionify(
+    storageify(App, { key: 'cycle-spa-state' } as StorageifyOptions)
+);
 
 /// #if PRODUCTION
-run(main as any, drivers);
+run(main as any, mkDrivers());
+
 /// #else
-const rerun = rerunner(setup, driverFn, isolate);
+
+const rerun = rerunner(setup, mkDrivers, isolate);
 rerun(main as any);
 
 if (module.hot) {

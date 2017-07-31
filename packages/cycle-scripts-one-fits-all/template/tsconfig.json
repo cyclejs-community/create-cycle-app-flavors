@@ -2,7 +2,7 @@
     "compileOnSave": false,
     "compilerOptions":
     {
-        "module": "ES6",
+        "module": "es2015",
         "moduleResolution": "node",
         "target": "ES5",
         "sourceMap": true,
@@ -11,7 +11,7 @@
         "noImplicitReturns": true,
         "strict": true,
         "allowJs": true,
-        "lib": ["ES6", "ES5", "DOM"]
+        "lib": ["es2015", "dom"]
     },
     "exclude": [
         "node_modules"
