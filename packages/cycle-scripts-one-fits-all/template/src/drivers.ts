@@ -21,8 +21,9 @@ mkDriversCond = () => ({
         createBrowserHistory(),
         switchPath as RouteMatcher
     ),
+    storage: storageDriver,
     speech: speechDriver
-})
+});
 
 /// #else
 mkDriversCond = () => ({
@@ -37,7 +38,7 @@ mkDriversCond = () => ({
     ),
     storage: storageDriver,
     speech: speechDriver
-})
+});
 /// #endif
 export const mkDrivers = mkDriversCond;
 
@@ -53,6 +54,6 @@ export type DriverSinks = Partial<{
     HTTP : Stream<RequestOptions>;
     speech : Stream<string>;
     router : Stream<any>;
-}>
+}>;
 
-export type Component = (s: DriverSources) => DriverSinks;
+export type Component = (s : DriverSources) => DriverSinks;
