@@ -4,8 +4,10 @@ import { StateSource } from 'cycle-onionify';
 
 import { DriverSources, DriverSinks } from '../drivers';
 
-export interface State {};
-const defaultState : State = {};
+export interface State {
+    text : string;
+}
+const defaultState : State = { text: 'Edit me!' };
 
 export type Reducer = (prev : State) => State | undefined;
 export type Sources = DriverSources & { onion : StateSource<State> };
@@ -40,13 +42,19 @@ function intent(DOM : DOMSource) : Stream<Reducer> {
         prevState => (prevState === undefined ? defaultState : prevState)
     );
 
-    return xs.merge(init$);
+    const textValue$ : Stream<Reducer> = DOM.select('#text')
+        .events('input')
+        .map((ev : any) => ev.target.value)
+        .map<Reducer>(value => () => ({ text: value }));
+
+    return xs.merge(init$, textValue$);
 }
 
-function view(state$: Stream<State>) : Stream<VNode> {
+function view(state$ : Stream<State>) : Stream<VNode> {
     return state$.mapTo(
         <div>
             <h2>My Awesome Cycle.js app - Page 2</h2>
+            <textarea id="text" rows="3" value={text} />
             <button type="button" data-action="speak">
                 Speak to Me!
             </button>

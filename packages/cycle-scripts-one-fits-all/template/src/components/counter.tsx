@@ -26,7 +26,6 @@ export function Counter(sources : Sources) : Sinks {
 
     return {
         DOM: vdom$,
-        speech: xs.never(),
         onion: action$,
         router: routes$
     };
