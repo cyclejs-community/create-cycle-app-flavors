@@ -6,20 +6,18 @@ import { DriverSources, DriverSinks } from '../drivers';
 
 export interface State {
     count : number;
-}
-export type Reducer = (prev  State) => State | undefined;
+};
+const defaultState : State = {
+    count: 30
+};
+
+export type Reducer = (prev : State) => State | undefined;
 export type Sources = DriverSources & { onion : StateSource<State> };
 export type Sinks = DriverSinks & { onion : Stream<Reducer> };
 
-export function Page1(sources : Sources): Sinks {
+export function Counter(sources : Sources) : Sinks {
     const action$ : Stream<Reducer> = intent(sources.DOM);
     const vdom$ : Stream<VNode> = view(sources.onion.state$);
-
-    const touchSpeech$ = sources.DOM
-        .select('[data-action="speak"]')
-        .events('click')
-        .map(({ currentTarget }) => (currentTarget as Element).textContent)
-        .map(text => (typeof text === 'string' ? text : ''));
 
     const routes$ = sources.DOM
         .select('[data-action="navigate"]')
@@ -28,23 +26,22 @@ export function Page1(sources : Sources): Sinks {
 
     return {
         DOM: vdom$,
-        speech: touchSpeech$,
+        speech: xs.never(),
         onion: action$,
         router: routes$
     };
 }
 
 function intent(DOM : DOMSource): Stream<Reducer> {
-    const init$ = xs.of(
-        (prevState : State): State =>
-            typeof prevState === 'undefined' ? { count: 30 } : prevState
+    const init$ = xs.of<Reducer>(
+        prevState => (prevState === undefined ? defaultState : prevState)
     );
 
     const add$ : Stream<Reducer> = DOM.select('.add')
         .events('click')
         .mapTo<Reducer>(state => ({ ...state, count: state.count + 1 }));
 
-    const subtract$: Stream<Reducer> = DOM.select('.subtract')
+    const subtract$ : Stream<Reducer> = DOM.select('.subtract')
         .events('click')
         .mapTo<Reducer>(state => ({ ...state, count: state.count - 1 }));
 
@@ -63,9 +60,6 @@ function view(state$ : Stream<State>): Stream<VNode> {
             </button>
             <button type="button" className="subtract">
                 Decrease
-            </button>
-            <button type="button" data-action="speak">
-                Wibble
             </button>
             <button type="button" data-action="navigate">
                 Page 2

@@ -23,7 +23,6 @@ describe('app tests', () => {
             <span>Counter: ${count}</span>
             <button>Increase</button>
             <button>Decrease</button>
-            <button>Wibble</button>
             <button>Page 2</button>
         </div>
     `;

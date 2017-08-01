@@ -1,10 +1,10 @@
 import { Component } from './drivers';
 
-import { Page1 } from './pages/page1';
-import { Page2 } from './pages/page2';
+import { Counter } from './components/counter';
+import { Speaker } from './components/speaker';
 
 export interface RouteValue {
-    page : Component;
+    component : Component;
     scope : string;
 }
 export interface Routes {
@@ -12,8 +12,8 @@ export interface Routes {
 }
 
 export const routes : Routes = {
-    '/': { page: Page1, scope: 'page1' },
-    '/p2': { page: Page2, scope: 'page2' }
+    '/': { component: Counter, scope: 'counter' },
+    '/p2': { component: Speaker, scope: 'speaker' }
 };
 
 export const initialRoute = '/';

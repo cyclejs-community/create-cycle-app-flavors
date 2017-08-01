@@ -7,15 +7,8 @@ import storageify from 'cycle-storageify';
 import { mkDrivers, Component } from './drivers';
 import { App } from './app';
 
-// TODO PR upstream - 2nd,3rd options should be optional
-declare type StorageifyOptions = {
-    key : string;
-    serialize(state : any): string;
-    deserialize(stateStr : string): any;
-};
-
-const main: Component = onionify(
-    storageify(App, { key: 'cycle-spa-state' } as StorageifyOptions)
+const main : Component = onionify(
+    storageify(App, { key: 'cycle-spa-state' )
 );
 
 /// #if PRODUCTION
@@ -34,3 +27,4 @@ if (module.hot) {
     });
 }
 /// #endif
+

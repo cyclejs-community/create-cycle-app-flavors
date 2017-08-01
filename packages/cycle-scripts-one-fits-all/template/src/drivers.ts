@@ -6,8 +6,7 @@ import { timeDriver, TimeSource } from '@cycle/time';
 import { makeRouterDriver, RouterSource, RouteMatcher } from 'cyclic-router';
 import { createBrowserHistory } from 'history';
 import switchPath from 'switch-path';
-//import storageDriver from '@cycle/storage'
-const storageDriver = require('@cycle/storage').default; // TODO PR to add missing typeings
+import storageDriver from '@cycle/storage';
 
 import speechDriver from './drivers/speech';
 
@@ -57,3 +56,4 @@ export type DriverSinks = Partial<{
 }>;
 
 export type Component = (s : DriverSources) => DriverSinks;
+export const driverNames : string[] = Object.keys(mkDrivers());
