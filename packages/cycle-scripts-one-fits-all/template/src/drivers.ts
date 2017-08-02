@@ -23,15 +23,7 @@ const driverThunks : DriverThunk[] = [
             makeRouterDriver(createBrowserHistory(), switchPath as RouteMatcher)
     ],
     ['storage', () => storageDriver],
-    ['speech', () => speechDriver],
-    [
-        'auth0',
-        () =>
-            makeAuth0Driver(
-                'CoDxjf3YK5wB9y14G0Ee9oXlk03zFuUF',
-                'odbrian.eu.auth0.com'
-            )
-    ]
+    ['speech', () => speechDriver]
 ];
 
 export const buildDrivers = (fn : DriverThunkMapper) =>
