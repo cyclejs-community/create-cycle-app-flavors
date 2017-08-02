@@ -2,9 +2,10 @@ import xs, { Stream } from 'xstream';
 import { restartable } from 'cycle-restart';
 import { Sources as BaseSources, Sinks as BaseSinks } from '@cycle/run';
 export { Sources as BaseSources, Sinks as BaseSinks } from '@cycle/run';
-import { makeHTTPDriver, HTTPSource, RequestOptions } from '@cycle/http';
-import { timeDriver, TimeSource } from '@cycle/time';
-import { makeRouterDriver, RouterSource, RouteMatcher } from 'cyclic-router';
+import { makeDOMDriver } from '@cycle/dom'
+import { makeHTTPDriver } from '@cycle/http';
+import { timeDriver } from '@cycle/time';
+import { makeRouterDriver, RouteMatcher } from 'cyclic-router';
 import { createBrowserHistory } from 'history';
 import switchPath from 'switch-path';
 import storageDriver from '@cycle/storage';
