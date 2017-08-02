@@ -6,7 +6,7 @@ import storageify from 'cycle-storageify';
 import { restartable } from 'cycle-restart';
 
 import { buildDrivers, Component } from './drivers';
-import { App } from './app';
+import { App } from './components/app';
 
 const main : Component = onionify(
     storageify(App, { key: 'cycle-spa-state' })

@@ -2,18 +2,32 @@ import xs, { Stream } from 'xstream';
 import { VNode, DOMSource } from '@cycle/dom';
 import { StateSource } from 'cycle-onionify';
 
-import { DriverSources, DriverSinks } from '../drivers';
+import { BaseSources, BaseSinks } from '../drivers';
+import { SpeechSource, SpeechSink } from '../drivers/speech';
 
+// Types
+export interface Sources extends BaseSources {
+    DOM : DOMSource;
+}
+interface AllSources extends Sources {
+    onion : StateSource<State>;
+}
+export interface Sinks extends BaseSinks {
+    DOM : Stream<VNode>;
+    router : RouterSink;
+}
+interface AllSinks extends Sinks {
+    onion : Stream<Reducer>;
+}
+
+// State
 export interface State {
     count : number;
 };
 const defaultState : State = {
     count: 30
 };
-
 export type Reducer = (prev : State) => State | undefined;
-export type Sources = DriverSources & { onion : StateSource<State> };
-export type Sinks = DriverSinks & { onion : Stream<Reducer> };
 
 export function Counter(sources : Sources) : Sinks {
     const action$ : Stream<Reducer> = intent(sources.DOM);
@@ -47,7 +61,7 @@ function intent(DOM : DOMSource) : Stream<Reducer> {
     return xs.merge(init$, add$, subtract$);
 }
 
-function view(state$ : Stream<State>): Stream<VNode> {
+function view(state$ : Stream<State> : Stream<VNode> {
     return state$.map(({count}) =>
         <div>
             <h2>My Awesome Cycle.js app - Page 1</h2>
@@ -65,4 +79,4 @@ function view(state$ : Stream<State>): Stream<VNode> {
             </button>
         </div>
     );
-}
+};

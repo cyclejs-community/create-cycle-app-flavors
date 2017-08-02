@@ -4,13 +4,30 @@ import { StateSource } from 'cycle-onionify';
 import isolate from '@cycle/isolate';
 import { extractSinks } from 'cyclejs-utils'
 
-import { DriverSources, DriverSinks, Component, driverNames } from './drivers';
-import { RouteValue, routes, initialRoute } from './routes';
+import { BaseSources, BaseSinks, driverNames } from '../drivers';
+import { RouteValue, routes, initialRoute } from '../routes';
 
-import { State as CounterState } from './components/counter'
-import { State as SpeakerState } from './components/speaker'
+// Types
+import {
+    State as CounterState,
+    Sources as CounterSources,
+    Sinks as CounterSinks
+} from './counter';
+import {
+    State as SpeakerState,
+    Sources as SpeakerSources,
+    Sinks as SpeakerSinks
+} from './speaker';
+export interface Sources extends BaseSources, SpeakerSources, CounterSources {
+    onion: StateSource<State>;
+}
+export interface Sinks extends BaseSinks, SpeakerSinks, CounterSinks {
+    onion: Stream<Reducer>;
+}
+
+// State
 export interface State {
-    thing : number;
+    thing: number;
     counter : CounterState;
     speaker : SpeakerState;
 }
@@ -18,13 +35,10 @@ const defaultState : State = {
     thing: 123,
     counter: { count: 5 },
     speaker: { text: 'Edit me!' }
-};
-
+}
 export type Reducer = (prev? : State) => State | undefined;
-export type Sources = DriverSources & { onion : StateSource<State> };
-export type Sinks = DriverSinks & { onion : Stream<Reducer> };
 
-export function App(sources : Sources) : Sinks {
+export function App(sources : AllSources) : AllSinks {
     const state$ = sources.onion.state$;
     const initReducer$ = xs.of<Reducer>(
         prevState => (prevState === undefined ? defaultState : prevState)

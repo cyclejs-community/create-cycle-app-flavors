@@ -8,7 +8,7 @@ export interface RouteValue {
     scope : string;
 }
 export interface Routes {
-    readonly [index : string]: RouteValue;
+    readonly [index : string] : RouteValue;
 }
 
 export const routes : Routes = {

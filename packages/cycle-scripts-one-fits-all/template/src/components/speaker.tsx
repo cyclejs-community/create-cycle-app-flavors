@@ -1,17 +1,37 @@
 import xs, { Stream } from 'xstream';
 import { VNode, DOMSource } from '@cycle/dom';
 import { StateSource } from 'cycle-onionify';
+import { RouterSource, RouteMatcher } from 'cyclic-router'
 
-import { DriverSources, DriverSinks } from '../drivers';
+import { BaseSources, BaseSinks } from '../drivers';
+import { SpeechSource, SpeechSink } from '../drivers/speech';
 
+// Types
+export interface Sources extends BaseSources {
+    DOM : DOMSource;
+}
+interface AllSources extends Sources {
+    onion : StateSource<State>;
+}
+export interface Sinks extends BaseSinks {
+    DOM : Stream<VNode>;
+    speech : SpeechSink;
+    router : RouterSink;
+    auth0 : Auth0Sink;
+}
+interface AllSources extends Sources {
+    onion : StateSource<State>;
+}
+interface AllSinks extends Sinks {
+    onion : Stream<Reducer>;
+}
+
+// State
 export interface State {
     text : string;
 }
-const defaultState : State = { text: 'Edit me!' };
-
-export type Reducer = (prev : State) => State | undefined;
-export type Sources = DriverSources & { onion : StateSource<State> };
-export type Sinks = DriverSinks & { onion : Stream<Reducer> };
+const defaultState : State = { text: 'Edit me!' }
+export type Reducer = (prev ?: State) => State | undefined;
 
 export function Speaker(sources : Sources) : Sinks {
     const action$ : Stream<Reducer> = intent(sources.DOM);

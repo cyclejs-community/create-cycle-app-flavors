@@ -1,6 +1,7 @@
 import xs, { Stream } from 'xstream';
 import { restartable } from 'cycle-restart';
-import { makeDOMDriver, VNode, DOMSource } from '@cycle/dom';
+import { Sources as BaseSources, Sinks as BaseSinks } from '@cycle/run';
+export { Sources as BaseSources, Sinks as BaseSinks } from '@cycle/run';
 import { makeHTTPDriver, HTTPSource, RequestOptions } from '@cycle/http';
 import { timeDriver, TimeSource } from '@cycle/time';
 import { makeRouterDriver, RouterSource, RouteMatcher } from 'cyclic-router';
@@ -13,6 +14,7 @@ import speechDriver from './drivers/speech';
 export type DriverThunk = [string, () => any];
 export type DriverThunkMapper = ( t : DriverThunk) => DriverThunk;
 
+// Set of Drivers used in this App
 const driverThunks : DriverThunk[] = [
     ['DOM', () => makeDOMDriver('#app')],
     ['HTTP', () => makeHTTPDriver()],
@@ -34,23 +36,4 @@ export const buildDrivers = (fn : DriverThunkMapper) =>
 
 export const driverNames = driverThunks.map(([n, t]) => n).concat(['onion']);
 
-export type DriverSources = {
-    DOM : DOMSource
-    HTTP : HTTPSource
-    time : TimeSource
-    router : RouterSource
-    storage : any
-    auth0 : Auth0Source
-};
-
-export type DriverSinks = Partial<{
-    DOM : Stream<VNode>
-    HTTP : Stream<RequestOptions>
-    router : Stream<any>
-    storage : Stream<any>
-    speech : Stream<string>
-    auth0 : Stream<Auth0Actions>
-}>;
-
-export type Component = (s : DriverSources) => DriverSinks;
-export type ComponentWrapper = (c : Component) => Component;
+export type Component = (s : BaseSources) => BaseSinks;
