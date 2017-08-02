@@ -31,7 +31,7 @@ export function Counter(sources : Sources) : Sinks {
     };
 }
 
-function intent(DOM : DOMSource): Stream<Reducer> {
+function intent(DOM : DOMSource) : Stream<Reducer> {
     const init$ = xs.of<Reducer>(
         prevState => (prevState === undefined ? defaultState : prevState)
     );
@@ -48,7 +48,7 @@ function intent(DOM : DOMSource): Stream<Reducer> {
 }
 
 function view(state$ : Stream<State>): Stream<VNode> {
-    return state$.map(s => s.count).map(count =>
+    return state$.map({count} =>
         <div>
             <h2>My Awesome Cycle.js app - Page 1</h2>
             <span>
