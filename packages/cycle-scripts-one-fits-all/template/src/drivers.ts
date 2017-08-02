@@ -41,3 +41,24 @@ export const buildDrivers = (fn : DriverThunkMapper) =>
         .reduce((a, c) => Object.assign(a, c), {});
 
 export const driverNames = driverThunks.map(([n, t]) => n).concat(['onion']);
+
+export type DriverSources = {
+    DOM : DOMSource
+    HTTP : HTTPSource
+    time : TimeSource
+    router : RouterSource
+    storage : any
+    auth0 : Auth0Source
+};
+
+export type DriverSinks = Partial<{
+    DOM : Stream<VNode>
+    HTTP : Stream<RequestOptions>
+    router : Stream<any>
+    storage : Stream<any>
+    speech : Stream<string>
+    auth0 : Stream<Auth0Actions>
+}>;
+
+export type Component = (s : DriverSources) => DriverSinks;
+export type ComponentWrapper = (c : Component) => Component;
