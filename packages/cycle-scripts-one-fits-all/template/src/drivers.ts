@@ -10,50 +10,34 @@ import storageDriver from '@cycle/storage';
 
 import speechDriver from './drivers/speech';
 
-let mkDriversCond: any;
-/// #if PRODUCTION
-mkDriversCond = () => ({
-    DOM: makeDOMDriver('#app'),
-    HTTP: makeHTTPDriver(),
-    time: timeDriver,
-    router: makeRouterDriver(
-        createBrowserHistory(),
-        switchPath as RouteMatcher
-    ),
-    storage: storageDriver,
-    speech: speechDriver
-});
+export type DriverThunk = [string, () => any];
+export type DriverThunkMapper = ( t: DriverThunk) => DriverThunk;
 
-/// #else
-mkDriversCond = () => ({
-    DOM: restartable(makeDOMDriver('#app'), {
-        pauseSinksWhileReplaying: false
-    }),
-    HTTP: restartable(makeHTTPDriver()),
-    time: timeDriver,
-    router: makeRouterDriver(
-        createBrowserHistory(),
-        switchPath as RouteMatcher
-    ),
-    storage: storageDriver,
-    speech: speechDriver
-});
-/// #endif
-export const mkDrivers = mkDriversCond;
+const driverThunks : DriverThunk[] = [
+    ['DOM', () => makeDOMDriver('#app')],
+    ['HTTP', () => makeHTTPDriver()],
+    ['time', () => timeDriver],
+    [
+        'router',
+        () =>
+            makeRouterDriver(createBrowserHistory(), switchPath as RouteMatcher)
+    ],
+    ['storage', () => storageDriver],
+    ['speech', () => speechDriver],
+    [
+        'auth0',
+        () =>
+            makeAuth0Driver(
+                'CoDxjf3YK5wB9y14G0Ee9oXlk03zFuUF',
+                'odbrian.eu.auth0.com'
+            )
+    ]
+];
 
-export type DriverSources = {
-    DOM : DOMSource;
-    HTTP : HTTPSource;
-    time : TimeSource;
-    router : RouterSource;
-};
+export const buildDrivers = (fn : DriverThunkMapper) =>
+    driverThunks
+        .map(fn)
+        .map(([n, t] : DriverThunk) => ({ [n]: t }))
+        .reduce((a, c) => Object.assign(a, c), {});
 
-export type DriverSinks = Partial<{
-    DOM : Stream<VNode>;
-    HTTP : Stream<RequestOptions>;
-    speech : Stream<string>;
-    router : Stream<any>;
-}>;
-
-export type Component = (s : DriverSources) => DriverSinks;
-export const driverNames : string[] = Object.keys(mkDrivers());
+export const driverNames = driverThunks.map(([n, t]) => n).concat(['onion']);
