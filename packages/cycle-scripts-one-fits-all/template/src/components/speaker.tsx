@@ -31,9 +31,9 @@ export interface State {
     text : string;
 }
 const defaultState : State = { text: 'Edit me!' }
-export type Reducer = (prev ?: State) => State | undefined;
+export type Reducer = (prev? : State) => State | undefined;
 
-export function Speaker(sources : Sources) : Sinks {
+export function Speaker(sources : AllSources) : AllSinks {
     const action$ : Stream<Reducer> = intent(sources.DOM);
     const vdom$ : Stream<VNode> = view(sources.onion.state$);
 

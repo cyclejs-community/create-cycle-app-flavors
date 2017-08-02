@@ -19,10 +19,16 @@ import {
     Sinks as SpeakerSinks
 } from './speaker';
 export interface Sources extends BaseSources, SpeakerSources, CounterSources {
-    onion: StateSource<State>;
+    onion : StateSource<State>;
+}
+interface AllSources extends Sources {
+    onion : StateSource<State>;
 }
 export interface Sinks extends BaseSinks, SpeakerSinks, CounterSinks {
-    onion: Stream<Reducer>;
+    onion : Stream<Reducer>;
+}
+interface AllSinks extends Sinks {
+    onion : Stream<Reducer>;
 }
 
 // State

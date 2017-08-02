@@ -29,7 +29,7 @@ const defaultState : State = {
 };
 export type Reducer = (prev : State) => State | undefined;
 
-export function Counter(sources : Sources) : Sinks {
+export function Counter(sources : AllSources) : AllSinks {
     const action$ : Stream<Reducer> = intent(sources.DOM);
     const vdom$ : Stream<VNode> = view(sources.onion.state$);
 
