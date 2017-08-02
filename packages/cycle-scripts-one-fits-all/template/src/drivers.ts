@@ -11,7 +11,7 @@ import storageDriver from '@cycle/storage';
 import speechDriver from './drivers/speech';
 
 export type DriverThunk = [string, () => any];
-export type DriverThunkMapper = ( t: DriverThunk) => DriverThunk;
+export type DriverThunkMapper = ( t : DriverThunk) => DriverThunk;
 
 const driverThunks : DriverThunk[] = [
     ['DOM', () => makeDOMDriver('#app')],

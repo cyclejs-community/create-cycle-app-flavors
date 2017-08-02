@@ -17,7 +17,7 @@ export interface State {
 const defaultState : State = {
     thing: 123,
     counter: { count: 5 },
-    speaker: {}
+    speaker: { text: 'Edit me!' }
 };
 
 export type Reducer = (prev? : State) => State | undefined;
