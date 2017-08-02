@@ -11,7 +11,7 @@ import storageDriver from '@cycle/storage';
 
 import speechDriver from './drivers/speech';
 
-export type DriverThunk = [string, () => any];
+export type DriverThunk = Readonly<[string, () => any]> & [string, () => any] // work around readonly
 export type DriverThunkMapper = ( t : DriverThunk) => DriverThunk;
 
 // Set of Drivers used in this App
