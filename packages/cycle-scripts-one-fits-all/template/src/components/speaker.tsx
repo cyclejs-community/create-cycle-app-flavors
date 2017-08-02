@@ -51,7 +51,7 @@ function intent(DOM : DOMSource) : Stream<Reducer> {
 }
 
 function view(state$ : Stream<State>) : Stream<VNode> {
-    return state$.map({text} =>
+    return state$.map(({text}) =>
         <div>
             <h2>My Awesome Cycle.js app - Page 2</h2>
             <textarea id="text" rows="3" value={text} />

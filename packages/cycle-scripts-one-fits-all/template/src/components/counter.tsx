@@ -48,7 +48,7 @@ function intent(DOM : DOMSource) : Stream<Reducer> {
 }
 
 function view(state$ : Stream<State>): Stream<VNode> {
-    return state$.map({count} =>
+    return state$.map(({count}) =>
         <div>
             <h2>My Awesome Cycle.js app - Page 1</h2>
             <span>
