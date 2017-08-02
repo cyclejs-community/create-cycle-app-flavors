@@ -2,7 +2,7 @@ import xs, { Stream } from 'xstream';
 import { VNode, DOMSource } from '@cycle/dom';
 import { StateSource } from 'cycle-onionify';
 import isolate from '@cycle/isolate';
-import { extractSinks } from 'cyclejs-utils'
+import { extractSinks } from 'cyclejs-utils';
 
 import { BaseSources, BaseSinks, driverNames } from '../drivers';
 import { RouteValue, routes, initialRoute } from '../routes';
