@@ -15,9 +15,9 @@ export interface BaseSources {
 }
 
 export interface BaseSinks {
-    DOM : Stream<VNode>;
-    HTTP : Stream<RequestOptions>;
-    router : RouterSink;
-    storage : Stream<any>;
-    speech : Stream<string>;
+    DOM? : Stream<VNode>;
+    HTTP? : Stream<RequestOptions>;
+    router? : RouterSink;
+    storage? : Stream<any>;
+    speech? : Stream<string>;
 }

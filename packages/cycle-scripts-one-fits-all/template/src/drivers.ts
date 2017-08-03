@@ -1,6 +1,6 @@
 import xs, { Stream } from 'xstream';
 import { restartable } from 'cycle-restart';
-import { makeDOMDriver } from '@cycle/dom'
+import { makeDOMDriver } from '@cycle/dom';
 import { makeHTTPDriver } from '@cycle/http';
 import { timeDriver } from '@cycle/time';
 import { makeRouterDriver, RouteMatcher } from 'cyclic-router';
@@ -10,7 +10,7 @@ import storageDriver from '@cycle/storage';
 
 import speechDriver from './drivers/speech';
 
-export type DriverThunk = Readonly<[string, () => any]> & [string, () => any] // work around readonly
+export type DriverThunk = Readonly<[string, () => any]> & [string, () => any]; // work around readonly
 export type DriverThunkMapper = ( t : DriverThunk) => DriverThunk;
 
 // Set of Drivers used in this App

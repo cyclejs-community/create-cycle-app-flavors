@@ -1,4 +1,4 @@
-import { Component } from './drivers';
+import { Component } from './interfaces';
 
 import { Counter } from './components/counter';
 import { Speaker } from './components/speaker';

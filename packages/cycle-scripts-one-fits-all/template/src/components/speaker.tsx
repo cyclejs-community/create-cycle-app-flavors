@@ -22,9 +22,16 @@ export type Reducer = (prev? : State) => State | undefined;
 
 // Actions
 const SPEECH = 'speech', NAVIGATE = 'navigate', UPDATE = 'update';
-interface SpeechAction { type : typeof SPEECH }
-interface NavigationAction { type : typeof NAVIGATE }
-interface UpdateAction { type : typeof UPDATE, reducer : Reducer }
+interface SpeechAction {
+    type : typeof SPEECH;
+}
+interface NavigationAction {
+    type : typeof NAVIGATE;
+}
+interface UpdateAction {
+    type : typeof UPDATE;
+    reducer : Reducer;
+}
 type Action = SpeechAction | NavigationAction | UpdateAction;
 
 export function Speaker({ DOM, onion } : Sources) : Sinks {
@@ -33,7 +40,7 @@ export function Speaker({ DOM, onion } : Sources) : Sinks {
     return {
         DOM: view(onion.state$),
         speech: speech(action$, onion.state$),
-        onion: onion(action$),
+        onion: onionFn(action$),
         router: router(action$)
     };
 }
@@ -73,14 +80,14 @@ function intent(DOM : DOMSource) : Stream<Action> {
     return xs.merge(updateText$, speech$, navigation$);
 }
 
-function onion(action$ : Stream<Action>) : Stream<Reducer> {
+function onionFn(action$ : Stream<Action>) : Stream<Reducer> {
     const init$ = xs.of<Reducer>(
         prevState => (prevState === undefined ? defaultState : prevState)
     );
 
     const update$ : Stream<Reducer> = action$
         .filter(({ type }) => type === UPDATE)
-        .map<Reducer>((action : UpdateAction) => action.reducer)
+        .map<Reducer>((action : UpdateAction) => action.reducer);
 
     return xs.merge(init$, update$);
 }

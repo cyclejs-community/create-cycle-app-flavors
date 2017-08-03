@@ -11,10 +11,10 @@ import { buildDrivers } from './drivers';
 import { Component } from './interfaces';
 import { App } from './components/app';
 
-function wrapMain(main : Component) {
+function wrapMain(main : Component) : Component {
     return onionify(
-        storageify(main, { key: 'cycle-spa-state' })
-    );
+        storageify(main as any, { key: 'cycle-spa-state' })
+    ) as any;
 }
 
 const main : Component = wrapMain(App);
@@ -28,7 +28,7 @@ const mkDrivers = () =>
         if (k === 'DOM') {
             return [k, restartable(t(), { pauseSinksWhileReplaying: false })];
         }
-        if (k === 'time') {
+        if (k === 'time' || k === 'router') {
             return [k, t()];
         }
         return [k, restartable(t())];

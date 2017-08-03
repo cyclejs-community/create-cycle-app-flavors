@@ -20,7 +20,7 @@ export interface Sinks extends BaseSinks {
 
 // State
 export interface State {
-    thing: number;
+    thing : number;
     counter? : CounterState;
     speaker? : SpeakerState;
 }
@@ -28,7 +28,7 @@ const defaultState : State = {
     thing: 123,
     counter: { count: 5 },
     speaker: undefined //use default state of component
-}
+};
 export type Reducer = (prev? : State) => State | undefined;
 
 export function App(sources : Sources) : Sinks {

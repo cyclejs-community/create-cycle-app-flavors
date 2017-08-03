@@ -9,7 +9,7 @@ export interface Sources extends BaseSources {
     onion : StateSource<State>;
 }
 export interface Sinks extends BaseSinks {
-    onion? : StateSource<Reducer>;
+    onion? : Stream<Reducer>;
 }
 
 // State
@@ -53,7 +53,7 @@ function intent(DOM : DOMSource) : Stream<Reducer> {
     return xs.merge(init$, add$, subtract$);
 }
 
-function view(state$ : Stream<State> : Stream<VNode> {
+function view(state$ : Stream<State>) : Stream<VNode> {
     return state$.map(({ count }) =>
         <div>
             <h2>My Awesome Cycle.js app - Page 1</h2>
