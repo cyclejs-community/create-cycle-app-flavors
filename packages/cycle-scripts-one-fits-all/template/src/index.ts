@@ -1,21 +1,13 @@
 import { setup, run } from '@cycle/run';
 import { rerunner } from 'cycle-restart';
 import isolate from '@cycle/isolate';
-import onionify from 'cycle-onionify';
-import storageify from 'cycle-storageify';
 /// #if DEVELOPMENT
 import { restartable } from 'cycle-restart';
 /// #endif
 
-import { buildDrivers } from './drivers';
+import { buildDrivers, wrapMain } from './drivers';
 import { Component } from './interfaces';
 import { App } from './components/app';
-
-function wrapMain(main : Component) : Component {
-    return onionify(
-        storageify(main as any, { key: 'cycle-spa-state' })
-    ) as any;
-}
 
 const main : Component = wrapMain(App);
 

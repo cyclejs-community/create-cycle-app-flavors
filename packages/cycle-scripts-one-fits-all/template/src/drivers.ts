@@ -5,9 +5,12 @@ import { makeHTTPDriver } from '@cycle/http';
 import { timeDriver } from '@cycle/time';
 import { makeRouterDriver, RouteMatcher } from 'cyclic-router';
 import { createBrowserHistory } from 'history';
+import onionify from 'cycle-onionify';
+import storageify from 'cycle-storageify';
 import switchPath from 'switch-path';
 import storageDriver from '@cycle/storage';
 
+import { Component } from './interfaces';
 import speechDriver from './drivers/speech';
 
 export type DriverThunk = Readonly<[string, () => any]> & [string, () => any]; // work around readonly
@@ -34,3 +37,9 @@ export const buildDrivers = (fn : DriverThunkMapper) =>
         .reduce((a, c) => Object.assign(a, c), {});
 
 export const driverNames = driverThunks.map(([n, t]) => n).concat(['onion']);
+
+export function wrapMain(main : Component) : Component {
+    return onionify(
+        storageify(main as any, { key: 'cycle-spa-state' })
+    ) as any;
+}
