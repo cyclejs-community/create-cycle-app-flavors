@@ -19,10 +19,11 @@ describe('app tests', () => {
 
     const expectedHTML = (count : number) => `
         <div>
-            <h2>My Awesome Cycle.js app</h2>
+            <h2>My Awesome Cycle.js app - Page 1</h2>
             <span>Counter: ${count}</span>
             <button>Increase</button>
             <button>Decrease</button>
+            <button>Page 2</button>
         </div>
     `;
 
