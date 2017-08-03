@@ -13,11 +13,6 @@ export default function speechDriver(speechText$ : Stream<string>) : void {
                 const utterance = new SpeechSynthesisUtterance(what);
                 window.speechSynthesis.speak(utterance);
             }
-        },
-        error: () => undefined,
-        complete: () => undefined
+        }
     });
 };
-
-export interface SpeechSource {}
-export type SpeechSink = Stream<string>;

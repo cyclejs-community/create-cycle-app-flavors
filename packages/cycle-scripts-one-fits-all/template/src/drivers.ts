@@ -1,7 +1,5 @@
 import xs, { Stream } from 'xstream';
 import { restartable } from 'cycle-restart';
-import { Sources as BaseSources, Sinks as BaseSinks } from '@cycle/run';
-export { Sources as BaseSources, Sinks as BaseSinks } from '@cycle/run';
 import { makeDOMDriver } from '@cycle/dom'
 import { makeHTTPDriver } from '@cycle/http';
 import { timeDriver } from '@cycle/time';
@@ -36,5 +34,3 @@ export const buildDrivers = (fn : DriverThunkMapper) =>
         .reduce((a, c) => Object.assign(a, c), {});
 
 export const driverNames = driverThunks.map(([n, t]) => n).concat(['onion']);
-
-export type Component = (s : BaseSources) => BaseSinks;

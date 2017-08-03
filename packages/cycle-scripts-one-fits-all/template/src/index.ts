@@ -3,16 +3,23 @@ import { rerunner } from 'cycle-restart';
 import isolate from '@cycle/isolate';
 import onionify from 'cycle-onionify';
 import storageify from 'cycle-storageify';
+/// #if DEVELOPMENT
 import { restartable } from 'cycle-restart';
+/// #endif
 
-import { buildDrivers, Component } from './drivers';
+import { buildDrivers } from './drivers';
+import { Component } from './interfaces';
 import { App } from './components/app';
 
-const main : Component = onionify(
-    storageify(App, { key: 'cycle-spa-state' })
-);
+function wrapMain(main : Component) {
+    return onionify(
+        storageify(main, { key: 'cycle-spa-state' })
+    );
+}
 
-/// #idef PRODUCTION
+const main : Component = wrapMain(App);
+
+/// #if PRODUCTION
 run(main as any, buildDrivers(([k, t]) => [k, t()]));
 
 /// #else
@@ -27,4 +34,13 @@ const mkDrivers = () =>
         return [k, restartable(t())];
     });
 const rerun = rerunner(setup, mkDrivers, isolate);
+rerun(main as any);
+
+if (module.hot) {
+    module.hot.accept('./components/app', () => {
+        const newApp = (require('./components/app') as any).App;
+
+        rerun(wrapMain(newApp));
+    });
+}
 /// #endif
